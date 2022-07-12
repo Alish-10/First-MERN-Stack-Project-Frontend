@@ -1,31 +1,54 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import Input from '../../shared/components/FormElements/Input';
 import Button from '../../shared/components/FormElements/Button';
-import { VALIDATOR_REQUIRE,VALIDATOR_MINLENGTH } from '../../shared/Util/Validators';
+import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/Util/Validators';
 import { useForm } from '../../shared/hooks/form-hooks';
 import './PlaceForm.css';
 import { DUMMY_PLACES } from './UserPlaces';
+import Card from '../../shared/components/UIElements/Card';
+
 
 const UpdatePlace = () => {
+  const [isLoading, setIsLoading] = useState(true);
   const placeId = useParams().placeId;
+
+  const [formState, inputHandler, setFormData] = useForm(
+    {
+      title: {
+        value: '',
+        isValid: false
+      },
+      description: {
+        value: '',
+        isValid: false
+      }
+    },
+    false
+  );
 
   const identifiedPlace = DUMMY_PLACES.find(p => p.id === placeId);
 
-  const [formState, inputHandler] = useForm(
-    {
-      title: {
-        value: identifiedPlace.title,
-        isValid: true
-      },
-      description: {
-        value: identifiedPlace.description,
-        isValid: true
-      }
-    },
-    true
-  );
+  useEffect(() => {
+    if(identifiedPlace) {
+
+      setFormData(
+        {
+          title: {
+            value: identifiedPlace.title,
+            isValid: true
+          },
+          description: {
+            value: identifiedPlace.description,
+            isValid: true
+          }
+        },
+        true
+        );
+    }
+    setIsLoading(false);
+  }, [setFormData, identifiedPlace]);
 
   const placeUpdateSubmitHandler = event => {
     event.preventDefault();
@@ -35,7 +58,17 @@ const UpdatePlace = () => {
   if (!identifiedPlace) {
     return (
       <div className="center">
+        <Card>
         <h2>Could not find place!</h2>
+        </Card>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="center">
+        <h2>Loading...</h2>
       </div>
     );
   }

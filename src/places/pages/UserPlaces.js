@@ -17,7 +17,7 @@ export const DUMMY_PLACES = [
     },
     {
         id: "p2",
-        title:"Empire State Building",
+        title:"Emp. State Building",
         description:"Empire state building is an legendry building",
         imageUrl:'https://media.timeout.com/images/101705309/image.jpg' ,
         address:'20 W 34th St, New York, NY 1001',
