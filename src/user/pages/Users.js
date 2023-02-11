@@ -1,19 +1,49 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { getAllUsers } from '../../shared/components/Api/UserApi';
+import ErrorModal from '../../shared/components/UIElements/ErrorModal'
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 
 import UsersList from '../components/UsersList';
 
 const Users = () => {
-  const USERS = [
-    {
-      id: 'u1',
-      name: 'Alish Dahal',
-      image:
-        'https://images.pexels.com/photos/839011/pexels-photo-839011.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260',
-      places: 3
-    }
-  ];
+  const [loadedUsers, setloadedUsers] = useState(null);
+  const [loading, setloading] = useState(false);
+  const [error, setError] = useState(null);
 
-  return <UsersList items={USERS} />;
+
+  const request = async () => {
+    setloading(true);
+    const response = await getAllUsers();
+    setloading(false);
+    response.statusCode !== 200 && setError(response.message);
+    return (
+      await response.data.users,
+      setloadedUsers(response.data.users))
+  }
+  useEffect(() => {
+    request();
+  }
+    , [])
+  const errorHandler = () => setError(null);
+
+
+  return (
+    <>
+      <ErrorModal error={error} onClear={errorHandler} />
+
+      {
+        loading && (
+          <div className='center'>
+            <LoadingSpinner />
+          </div>
+        )
+      }
+      {
+        loadedUsers &&
+        <UsersList items={loadedUsers} />
+      }
+    </>
+  )
 };
 
 export default Users;

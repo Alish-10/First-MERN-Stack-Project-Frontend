@@ -38,3 +38,18 @@ export const SignUpApi = async (data) => {
   }
 
 }
+
+export const getAllUsers = async () => {
+  try {
+    const response = await fetch(API_URL + '/users', {
+      method: 'GET'
+
+    });
+    return { statusCode: response.status, data: await response.json() };
+
+  }
+  catch (error) {
+    return error;
+
+  }
+}
