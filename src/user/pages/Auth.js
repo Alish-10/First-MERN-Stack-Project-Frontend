@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { SignUpApi } from '../../shared/components/Api/UserApi'
+import { LoginApi, SignUpApi } from '../../shared/components/Api/UserApi'
 import Button from '../../shared/components/FormElements/Button'
 import Input from '../../shared/components/FormElements/Input'
 import Card from '../../shared/components/UIElements/Card'
@@ -52,20 +52,24 @@ const Auth = () => {
   };
 
   const authSubmitHandler = async event => {
-    const data = {
+    const data = isLoginMode ? {
+      email: formState.inputs.email.value,
+      password: formState.inputs.password.value,
+    } : {
       name: formState.inputs.name.value,
       email: formState.inputs.email.value,
       password: formState.inputs.password.value,
     }
-    event.preventDefault();
     setLoading(true);
-    const response = await SignUpApi(data);
+    event.preventDefault();
+    const response = isLoginMode ? await LoginApi(data) : await SignUpApi(data);
     setLoading(false);
-    response.statusCode !== 201 &&
-      setError(response.message
+    console.log(response, "res");
+    (response.statusCode !== 201 || response.statusCode !== 200) &&
+      setError(response.data.message
         || 'Something went wrong, please try again.');
 
-    response.statusCode === 201 && auth.login();
+    (response.statusCode === 201 || response.statusCode === 200) && auth.login();
   }
   const errorHandler = () => {
     setError(null);

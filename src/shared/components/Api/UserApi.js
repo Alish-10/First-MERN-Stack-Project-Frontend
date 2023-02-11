@@ -13,10 +13,10 @@ export const LoginApi = async (data) => {
       )
     });
 
-    const responseData = await response.json();
+    return { statusCode: response.status, data: await response.json() };
 
   } catch (error) {
-    console.log(error, "error");
+    return error
   }
 
 }
