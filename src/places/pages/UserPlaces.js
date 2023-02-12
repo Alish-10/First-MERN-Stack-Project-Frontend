@@ -1,41 +1,44 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { API_URL } from '../../shared/components/Api'
+import ErrorModal from '../../shared/components/UIElements/ErrorModal'
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
+import { useHttpClient } from '../../shared/hooks/HttpHook'
 import PlaceList from '../components/PlaceList'
-
-export const DUMMY_PLACES = [
-    {
-        id: "p1",
-        title:"Empire State Building",
-        description:"Empire state building is an legendry building",
-        imageUrl:'https://media.timeout.com/images/101705309/image.jpg' ,
-        address:'20 W 34th St, New York, NY 1001',
-        location:{
-            lat: 40.7484405,
-            lng: -73.9878584
-        },
-        creator:'u1'
-    },
-    {
-        id: "p2",
-        title:"Emp. State Building",
-        description:"Empire state building is an legendry building",
-        imageUrl:'https://media.timeout.com/images/101705309/image.jpg' ,
-        address:'20 W 34th St, New York, NY 1001',
-        location:{
-            lat: 40.7484405,
-            lng: -73.9878584
-        },
-        creator:'u2'
-    }
-]
 
 
 const UserPlaces = () => {
+    const { isLoading, error, sendRequest, clearError } = useHttpClient();
+    const [loadedPlaces, setLoadedPlaces] = useState();
     const userId = useParams().userId;
-    const loadedPlaces = DUMMY_PLACES.filter(place => place.creator === userId);
-  return (
-    <PlaceList  items={loadedPlaces} />
-  )
+
+
+    useEffect(() => {
+        const fetchPlces = async () => {
+            try {
+                const response = await sendRequest(API_URL + `/places/user/${userId}`)
+                setLoadedPlaces(response.userWithPlaces)
+            } catch (error) {
+
+            }
+        }
+        fetchPlces();
+    }, [sendRequest, userId]);
+
+    return (
+        <>
+            <ErrorModal error={error} onClear={clearError} />
+            {isLoading &&
+                <div className='center'>
+                    <LoadingSpinner asOverlay />
+
+                </div>}
+            {!isLoading && loadedPlaces &&
+                <PlaceList items={loadedPlaces} />
+
+            }
+        </>
+    )
 }
 
-export default UserPlaces ;
+export default UserPlaces;

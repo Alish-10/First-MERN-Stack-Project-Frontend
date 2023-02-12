@@ -6,13 +6,13 @@ import Button from '../../shared/components/FormElements/Button';
 import { VALIDATOR_REQUIRE, VALIDATOR_MINLENGTH } from '../../shared/Util/Validators';
 import { useForm } from '../../shared/hooks/form-hooks';
 import './PlaceForm.css';
-import { DUMMY_PLACES } from './UserPlaces';
 import Card from '../../shared/components/UIElements/Card';
 
 
 const UpdatePlace = () => {
   const [isLoading, setIsLoading] = useState(true);
   const placeId = useParams().placeId;
+  const DUMMY_PLACES = [{}]
 
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -31,7 +31,7 @@ const UpdatePlace = () => {
   const identifiedPlace = DUMMY_PLACES.find(p => p.id === placeId);
 
   useEffect(() => {
-    if(identifiedPlace) {
+    if (identifiedPlace) {
 
       setFormData(
         {
@@ -45,7 +45,7 @@ const UpdatePlace = () => {
           }
         },
         true
-        );
+      );
     }
     setIsLoading(false);
   }, [setFormData, identifiedPlace]);
@@ -59,7 +59,7 @@ const UpdatePlace = () => {
     return (
       <div className="center">
         <Card>
-        <h2>Could not find place!</h2>
+          <h2>Could not find place!</h2>
         </Card>
       </div>
     );

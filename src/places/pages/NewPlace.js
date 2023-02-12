@@ -69,7 +69,11 @@ const NewPlace = () => {
 
       <ErrorModal error={error} onClear={clearError} />
       <form className="place-form" onSubmit={placeSubmitHandler}>
-        {isLoading && <LoadingSpinner asOverlay />}
+        {isLoading &&
+          <div className='center'>
+            <LoadingSpinner asOverlay />
+
+          </div>}
         <Input
           id="title"
           element="input"
