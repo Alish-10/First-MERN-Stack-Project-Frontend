@@ -6,14 +6,20 @@ import Map from '../../shared/components/UIElements/Map'
 
 import './PlaceItem.css'
 import { AuthContext } from '../../shared/context/auth-context'
+import { useHttpClient } from '../../shared/hooks/HttpHook'
+import { API_URL } from '../../shared/components/Api'
+import ErrorModal from '../../shared/components/UIElements/ErrorModal'
+import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 
 
 const PlaceItem = props => {
+    const { isLoading, error, clearError, sendRequest } = useHttpClient();
 
     const auth = useContext(AuthContext);
     const [showMap, setShowMap] = useState(false);
 
     const [showConfirmModal, setShowConfirmModal] = useState(false);
+    console.log(props)
 
     const openMapHandler = () => setShowMap(true);
     const closeMapHandler = () => setShowMap(false);
@@ -24,13 +30,23 @@ const PlaceItem = props => {
     const cancelDeleteHandler = () => {
         setShowConfirmModal(false);
     }
-    const confirmDeleteHandler = () => {
+    const confirmDeleteHandler = async () => {
         setShowConfirmModal(false);
-        console.log("Deleting....");
+        try {
+            const response = await sendRequest(API_URL + `/places/${props.id}`,
+                'DELETE'
+            );
+            props.onDelete(props.id);
+
+        } catch (err) {
+
+        }
     }
+
 
     return (
         <React.Fragment>
+            <ErrorModal error={error} onClear={clearError} />
             <Modal
                 show={showMap}
                 onCancel={closeMapHandler}
@@ -61,6 +77,7 @@ const PlaceItem = props => {
             </Modal>
             <li className='place-item'>
                 <Card className="place-item__content">
+                    {isLoading && <LoadingSpinner asOverlay />}
                     <div className='place-item__image'>
                         <img src={props.image}
                             alt={props.title} />
@@ -74,7 +91,7 @@ const PlaceItem = props => {
                         <Button inverse onClick={openMapHandler}>
                             VIEW ON MAP
                         </Button>
-                        {auth.isLoggedIn &&
+                        {auth.userId === props?.creatorId?.id &&
                             <>
                                 <Button to={`/places/${props.id}`}>
                                     EDIT

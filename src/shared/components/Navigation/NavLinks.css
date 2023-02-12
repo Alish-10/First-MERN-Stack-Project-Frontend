@@ -33,11 +33,12 @@
   
   .nav-links button {
     cursor: pointer;
-    border: 1px solid #292929;
-    color: #292929;
+    border: 1px solid #ece9e9;
+    color: #eeeaea;
     background: transparent;
     padding: 0.5rem;
     font: inherit;
+
   }
   
   .nav-links button:focus {
@@ -46,9 +47,29 @@
   
   .nav-links button:hover,
   .nav-links button:active {
-    background: #292929;
-    color: white;
+    background: #edf5eb;
+    border-color: #292929;
+    color: #292929;
   }
+ .nav-links .delete {
+      cursor: pointer;
+      border: 1px solid #e93f3f;
+      color: #e6dfdf;
+      background: transparent;
+      padding: 0.5rem;
+      font: inherit;
+
+  }
+  .nav-links .delete button:focus {
+    outline: none;
+  }
+  
+  .nav-links .delete:hover,
+  .nav-links .delete:active {
+    background: #ec3535;
+    color: rgb(238, 236, 236);
+  }
+
   
   @media (min-width: 768px) {
     .nav-links {
@@ -82,4 +103,16 @@
       background: #fcfcf9;
       color: #292929;
     }
+    .nav-links .delete {
+      border: 1px solid rgb(236, 83, 83);
+      color: rgb(253, 251, 251);
+      background: transparent;
+    }
+    
+    .nav-links .delete:hover,
+    .nav-links .delete:active {
+      background: #df3232;
+      color: #f7f5f5;
+    }
+    
   }

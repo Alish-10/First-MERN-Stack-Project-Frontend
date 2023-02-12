@@ -17,6 +17,7 @@ import { AuthContext } from './shared/context/auth-context';
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [isUserDeleted, setIsUserDeleted] = useState(false);
 
 
   const login = useCallback((uid) => {
@@ -27,6 +28,9 @@ const App = () => {
     setIsLoggedIn(false);
     setUserId(null);
   }, []);
+  const deleteUser = useCallback(() => {
+    setIsUserDeleted(true);
+  })
 
   let routes;
   if (isLoggedIn) {
@@ -69,7 +73,9 @@ const App = () => {
         isLoggedIn: isLoggedIn,
         login: login,
         logout: logout,
-        userId: userId
+        userId: userId,
+        isUserDeleted: isUserDeleted,
+        deleteUser: deleteUser
       }}
     >
 

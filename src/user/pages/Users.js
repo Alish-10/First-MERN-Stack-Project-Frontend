@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 import UsersList from '../components/UsersList';
 import ErrorModal from '../../shared/components/UIElements/ErrorModal';
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner';
 import { useHttpClient } from '../../shared/hooks/HttpHook';
 import { API_URL } from '../../shared/components/Api';
+import { AuthContext } from '../../shared/context/auth-context';
 
 const Users = () => {
+  const auth = useContext(AuthContext);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
   const [loadedUsers, setLoadedUsers] = useState();
 
@@ -21,7 +23,7 @@ const Users = () => {
       } catch (err) { }
     };
     fetchUsers();
-  }, [sendRequest]);
+  }, [sendRequest, auth.isUserDeleted]);
 
   return (
     <React.Fragment>
