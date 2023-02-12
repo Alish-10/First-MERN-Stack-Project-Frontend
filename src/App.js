@@ -30,6 +30,7 @@ const App = () => {
   }, []);
   const deleteUser = useCallback(() => {
     setIsUserDeleted(true);
+    setIsLoggedIn(false);
   })
 
   let routes;
