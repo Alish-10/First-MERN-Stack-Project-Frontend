@@ -1,5 +1,4 @@
 import React, { useContext, useState } from 'react'
-import { LoginApi, SignUpApi } from '../../shared/components/Api/UserApi'
 import Button from '../../shared/components/FormElements/Button'
 import Input from '../../shared/components/FormElements/Input'
 import Card from '../../shared/components/UIElements/Card'
@@ -8,15 +7,17 @@ import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 import ErrorModal from '../../shared/components/UIElements/ErrorModal'
 import { useForm } from '../../shared/hooks/form-hooks'
 import { VALIDATOR_EMAIL, VALIDATOR_MINLENGTH, VALIDATOR_REQUIRE } from '../../shared/Util/Validators';
+import { useHttpClient } from '../../shared/hooks/HttpHook';
 
 
 import './Auth.css'
+import { API_URL } from '../../shared/components/Api'
+
 
 const Auth = () => {
 
   const auth = useContext(AuthContext);
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { isLoading, error, sendRequest, clearError } = useHttpClient();
 
   const [formState, inputHandler, setFormData] = useForm({
     email: {
@@ -60,23 +61,26 @@ const Auth = () => {
       email: formState.inputs.email.value,
       password: formState.inputs.password.value,
     }
-    setLoading(true);
     event.preventDefault();
-    const response = isLoginMode ? await LoginApi(data) : await SignUpApi(data);
-    setLoading(false);
-    console.log(response, "res");
-    (response.statusCode !== 201 || response.statusCode !== 200) &&
-      setError(response.data.message
-        || 'Something went wrong, please try again.');
+    try {
+      const response =
+        await sendRequest(
+          isLoginMode ? API_URL + '/users/login' : API_URL + '/users/signup',
+          'POST',
+          JSON.stringify(data),
+          {
+            'Content-Type': 'application/json'
+          }
+        )
+      auth.login();
 
-    (response.statusCode === 201 || response.statusCode === 200) && auth.login();
-  }
-  const errorHandler = () => {
-    setError(null);
+    } catch (error) {
+
+    }
   }
   return (
     <>
-      <ErrorModal error={error} onClear={errorHandler} />
+      <ErrorModal error={error} onClear={clearError} />
       <Card className="authentication">
         {isLoading && <LoadingSpinner asOverlay />}
         <h2>Login Required</h2>
