@@ -12,6 +12,7 @@ import { useHttpClient } from '../../shared/hooks/HttpHook';
 
 import './Auth.css'
 import { API_URL } from '../../shared/components/Api'
+import ImageUpload from '../../shared/components/FormElements/ImageUpload'
 
 
 const Auth = () => {
@@ -36,7 +37,8 @@ const Auth = () => {
     if (!isLoginMode) {
       setFormData({
         ...formState.inputs,
-        name: undefined
+        name: undefined,
+        image: undefined
       },
         formState.inputs.email.isValid && formState.inputs.password.isValid);
     } else {
@@ -44,6 +46,10 @@ const Auth = () => {
         ...formState.inputs,
         name: {
           value: '',
+          isValid: false
+        },
+        image: {
+          value: null,
           isValid: false
         }
 
@@ -60,6 +66,7 @@ const Auth = () => {
       name: formState.inputs.name.value,
       email: formState.inputs.email.value,
       password: formState.inputs.password.value,
+      image: formState.inputs.image.value
     }
     event.preventDefault();
     try {
@@ -95,6 +102,14 @@ const Auth = () => {
               validators={[VALIDATOR_REQUIRE()]}
               errorText="Please enter your name."
               onInput={inputHandler} />}
+          {!isLoginMode &&
+            <ImageUpload
+              id='image'
+              center
+              onInput={inputHandler}
+
+            />
+          }
           <Input
             id='email'
             element='input'
