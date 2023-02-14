@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { API_URL, IMAGE_URL } from '../../shared/components/Api';
 
 import Avatar from '../../shared/components/UIElements/Avatar';
 import Card from '../../shared/components/UIElements/Card';
@@ -11,7 +12,7 @@ const UserItem = props => {
       <Card className="user-item__content">
         <Link to={`/${props.id}/places`}>
           <div className="user-item__image">
-            <Avatar image={props.image} alt={props.name} />
+            <Avatar image={IMAGE_URL + props.image} alt={props.name} />
           </div>
           <div className="user-item__info">
             <h2>{props.name}</h2>
