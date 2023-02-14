@@ -59,25 +59,26 @@ const Auth = () => {
   };
 
   const authSubmitHandler = async event => {
-    const data = isLoginMode ? {
-      email: formState.inputs.email.value,
-      password: formState.inputs.password.value,
-    } : {
-      name: formState.inputs.name.value,
-      email: formState.inputs.email.value,
-      password: formState.inputs.password.value,
-      image: formState.inputs.image.value
-    }
+    const formData = new FormData();
+    isLoginMode ? (
+      formData.append('email', formState.inputs.email.value),
+      formData.append('password', formState.inputs.password.value)
+
+    ) : (
+      formData.append('email', formState.inputs.email.value),
+      formData.append('password', formState.inputs.password.value),
+      formData.append('name', formState.inputs.name.value),
+      formData.append('image', formState.inputs.image.value)
+
+
+    )
     event.preventDefault();
     try {
       const response =
         await sendRequest(
           isLoginMode ? API_URL + '/users/login' : API_URL + '/users/signup',
           'POST',
-          JSON.stringify(data),
-          {
-            'Content-Type': 'application/json'
-          }
+          formData,
         )
       auth.login(response.user.id);
 
