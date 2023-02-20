@@ -37,7 +37,7 @@ const NewPlace = () => {
         isValid: false
       },
       image: {
-        value: '',
+        value: null,
         isValid: false
 
       }
@@ -60,9 +60,7 @@ const NewPlace = () => {
         API_URL + '/places',
         'POST',
         formData,
-        {
-          'Content-Type': 'application/json'
-        }
+
       )
       history.push('/')
     } catch (error) {
