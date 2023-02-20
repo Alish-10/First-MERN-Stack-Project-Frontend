@@ -7,7 +7,7 @@ import Map from '../../shared/components/UIElements/Map'
 import './PlaceItem.css'
 import { AuthContext } from '../../shared/context/auth-context'
 import { useHttpClient } from '../../shared/hooks/HttpHook'
-import { API_URL } from '../../shared/components/Api'
+import { API_URL, IMAGE_URL } from '../../shared/components/Api'
 import ErrorModal from '../../shared/components/UIElements/ErrorModal'
 import LoadingSpinner from '../../shared/components/UIElements/LoadingSpinner'
 
@@ -79,7 +79,7 @@ const PlaceItem = props => {
                 <Card className="place-item__content">
                     {isLoading && <LoadingSpinner asOverlay />}
                     <div className='place-item__image'>
-                        <img src={props.image}
+                        <img src={IMAGE_URL + props.image}
                             alt={props.title} />
                     </div>
                     <div className='place-item__info'>

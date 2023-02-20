@@ -58,27 +58,36 @@ const Auth = () => {
     setIsLoginMode(prevMode => !prevMode);
   };
 
+
   const authSubmitHandler = async event => {
     const formData = new FormData();
-    isLoginMode ? (
-      formData.append('email', formState.inputs.email.value),
-      formData.append('password', formState.inputs.password.value)
+    let data;
 
-    ) : (
-      formData.append('email', formState.inputs.email.value),
-      formData.append('password', formState.inputs.password.value),
-      formData.append('name', formState.inputs.name.value),
-      formData.append('image', formState.inputs.image.value)
+    if (isLoginMode) {
+      data = JSON.stringify({
+        email: formState.inputs.email.value,
+        password: formState.inputs.password.value
+      })
+    } else {
+      formData.append('email', formState.inputs.email.value);
+      formData.append('password', formState.inputs.password.value);
+      formData.append('name', formState.inputs.name.value);
+      formData.append('image', formState.inputs.image.value);
+    }
 
 
-    )
     event.preventDefault();
     try {
       const response =
         await sendRequest(
           isLoginMode ? API_URL + '/users/login' : API_URL + '/users/signup',
           'POST',
-          formData,
+          isLoginMode ? data : formData,
+          isLoginMode && {
+
+            'Content-Type': 'application/json'
+
+          }
         )
       auth.login(response.user.id);
 
@@ -108,6 +117,8 @@ const Auth = () => {
               id='image'
               center
               onInput={inputHandler}
+              errorText="Please provide an image."
+
 
             />
           }
