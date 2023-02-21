@@ -78,18 +78,28 @@ const Auth = () => {
 
     event.preventDefault();
     try {
-      const response =
-        await sendRequest(
-          isLoginMode ? API_URL + '/users/login' : API_URL + '/users/signup',
-          'POST',
-          isLoginMode ? data : formData,
-          isLoginMode && {
+      let response =
+        isLoginMode ? (
 
-            'Content-Type': 'application/json'
+          await sendRequest(
+            API_URL + '/users/login',
+            'POST',
+            data,
+            {
+              'Content-Type': 'application/json'
+            }
+          ),
+          auth.login(response.user.id)
 
-          }
+        ) : (
+
+          await sendRequest(
+            API_URL + '/users/signup',
+            'POST',
+            formData,
+          ),
+          auth.login(response.user.id)
         )
-      auth.login(response.user.id);
 
     } catch (error) {
 
