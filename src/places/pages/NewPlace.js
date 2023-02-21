@@ -60,6 +60,9 @@ const NewPlace = () => {
         API_URL + '/places',
         'POST',
         formData,
+        {
+          Authorization: 'Bearer ' + auth.token
+        }
 
       )
       history.push('/')
