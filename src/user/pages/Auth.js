@@ -88,8 +88,8 @@ const Auth = () => {
             {
               'Content-Type': 'application/json'
             }
-          ),
-          auth.login(response.user.id)
+          )
+
 
         ) : (
 
@@ -97,10 +97,10 @@ const Auth = () => {
             API_URL + '/users/signup',
             'POST',
             formData,
-          ),
-          auth.login(response.user.id)
-        )
+          )
 
+        )
+      auth.login(response.userId, response.token);
     } catch (error) {
 
     }
