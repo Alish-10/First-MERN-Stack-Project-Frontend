@@ -1,4 +1,131 @@
-import React, { useCallback, useEffect, useState } from 'react';
+// import React, { useCallback, useEffect, useState } from 'react';
+// import {
+//   BrowserRouter as Router,
+//   Route,
+//   Redirect,
+//   Switch
+// } from 'react-router-dom';
+
+// import Users from './user/pages/Users';
+// import NewPlace from './places/pages/NewPlace';
+// import MainNavigation from './shared/components/Navigation/MainNavigation';
+// import UserPlaces from './places/pages/UserPlaces';
+// import UpdatePlace from './places/pages/UpdatePlace';
+// import Auth from './user/pages/Auth';
+// import { AuthContext } from './shared/context/auth-context';
+
+// let logoutTimer;
+
+// const App = () => {
+//   const [token, setToken] = useState(null);
+//   const [userId, setUserId] = useState(null);
+//   const [tokenExpirationDate, seTtokenExpirationDate] = useState();
+//   const [isUserDeleted, setIsUserDeleted] = useState(false);
+
+
+//   const login = useCallback((uid, token, expirationDate) => {
+//     setToken(token);
+//     const tokenExpirationDate = expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
+//     seTtokenExpirationDate(tokenExpirationDate);
+//     localStorage.setItem('userData', JSON.stringify({
+//       userId: uid,
+//       token: token,
+//       expiration: tokenExpirationDate.toISOString()
+//     }));
+//     setUserId(uid);
+//   }, []);
+
+//   const logout = useCallback(() => {
+//     setToken(null);
+//     seTtokenExpirationDate(null);
+//     setUserId(null);
+//     localStorage.removeItem('userData');
+//   }, []);
+
+//   const deleteUser = useCallback(() => {
+//     setIsUserDeleted(true);
+//     setToken(null);
+//   })
+//   useEffect(() => {
+//     let remainingTime;
+//     (token && tokenExpirationDate) ? (
+//       remainingTime = tokenExpirationDate - new Date().getTime(),
+//       logoutTimer = setTimeout(logout, remainingTime))
+//       : (
+//         clearTimeout(logoutTimer)
+//       )
+
+//   }, [token, logout, tokenExpirationDate]);
+
+//   useEffect(() => {
+//     const storedData = JSON.parse(localStorage.getItem('userData'));
+//     if (storedData && storedData.token && new Date(storedData.expiration) > new Date()) {
+//       login(storedData.userId, storedData.token, new Date(storedData.expiration));
+//     }
+//   }, [login])
+
+//   let routes;
+//   if (token) {
+//     routes = (
+//       <Switch>
+//         <Route path="/" exact>
+//           <Users />
+//         </Route><Route path='/:userId/places' exact>
+//           <UserPlaces />
+//         </Route>
+//         <Route path="/places/new" exact>
+//           <NewPlace />
+//         </Route>
+//         <Route path="/places/:placeId" exact>
+//           <UpdatePlace />
+//         </Route>
+//         <Redirect to="/" />
+//       </Switch>
+//     );
+
+//   } else
+//     routes = (
+//       <Switch>
+//         <Route path="/" exact>
+//           <Users />
+//         </Route><Route path='/:userId/places' exact>
+//           <UserPlaces />
+//         </Route>
+//         <Route path="/auth" exact>
+//           <Auth />
+//         </Route>
+//         <Redirect to="/auth" />
+//       </Switch>
+//     );
+
+
+//   return (
+//     <AuthContext.Provider
+//       value={{
+//         isLoggedIn: !!token,
+//         token: token,
+//         login: login,
+//         logout: logout,
+//         userId: userId,
+//         isUserDeleted: isUserDeleted,
+//         deleteUser: deleteUser
+//       }}
+//     >
+
+//       <Router>
+//         <MainNavigation />
+//         <main>
+//           {routes}
+//         </main>
+//       </Router>
+//     </AuthContext.Provider>
+//   );
+// };
+
+// export default App;
+
+
+import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -8,115 +135,68 @@ import {
 
 import Users from './user/pages/Users';
 import NewPlace from './places/pages/NewPlace';
-import MainNavigation from './shared/components/Navigation/MainNavigation';
 import UserPlaces from './places/pages/UserPlaces';
 import UpdatePlace from './places/pages/UpdatePlace';
 import Auth from './user/pages/Auth';
+import MainNavigation from './shared/components/Navigation/MainNavigation';
 import { AuthContext } from './shared/context/auth-context';
-
-let logoutTimer;
+import { useAuth } from './shared/hooks/auth-hook';
 
 const App = () => {
-  const [token, setToken] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const [tokenExpirationDate, seTtokenExpirationDate] = useState();
-  const [isUserDeleted, setIsUserDeleted] = useState(false);
-
-
-  const login = useCallback((uid, token, expirationDate) => {
-    setToken(token);
-    const tokenExpirationDate = expirationDate || new Date(new Date().getTime() + 1000 * 60 * 60);
-    seTtokenExpirationDate(tokenExpirationDate);
-    localStorage.setItem('userData', JSON.stringify({
-      userId: uid,
-      token: token,
-      expiration: tokenExpirationDate.toISOString()
-    }));
-    setUserId(uid);
-  }, []);
-
-  const logout = useCallback(() => {
-    setToken(null);
-    seTtokenExpirationDate(null);
-    setUserId(null);
-    localStorage.removeItem('userData');
-  }, []);
-
-  const deleteUser = useCallback(() => {
-    setIsUserDeleted(true);
-    setToken(null);
-  })
-  useEffect(() => {
-    let remainingTime;
-    (token && tokenExpirationDate) ? (
-      remainingTime = tokenExpirationDate - new Date().getTime(),
-      logoutTimer = setTimeout(logout, remainingTime))
-      : (
-        clearTimeout(logoutTimer)
-      )
-
-  }, [token, logout, tokenExpirationDate]);
-
-  useEffect(() => {
-    const storedData = JSON.parse(localStorage.getItem('userData'));
-    if (storedData && storedData.token && new Date(storedData.expiration) > new Date()) {
-      login(storedData.userId, storedData.token, new Date(storedData.expiration));
-    }
-  }, [login])
+  const { token, login, logout, userId, deleteUser, isUserDeleted } = useAuth();
 
   let routes;
+
   if (token) {
     routes = (
       <Switch>
         <Route path="/" exact>
           <Users />
-        </Route><Route path='/:userId/places' exact>
+        </Route>
+        <Route path="/:userId/places" exact>
           <UserPlaces />
         </Route>
         <Route path="/places/new" exact>
           <NewPlace />
         </Route>
-        <Route path="/places/:placeId" exact>
+        <Route path="/places/:placeId">
           <UpdatePlace />
         </Route>
         <Redirect to="/" />
       </Switch>
     );
-
-  } else
+  } else {
     routes = (
       <Switch>
         <Route path="/" exact>
           <Users />
-        </Route><Route path='/:userId/places' exact>
+        </Route>
+        <Route path="/:userId/places" exact>
           <UserPlaces />
         </Route>
-        <Route path="/auth" exact>
+        <Route path="/auth">
           <Auth />
         </Route>
         <Redirect to="/auth" />
       </Switch>
     );
-
+  }
 
   return (
     <AuthContext.Provider
       value={{
         isLoggedIn: !!token,
         token: token,
+        userId: userId,
         login: login,
         logout: logout,
-        userId: userId,
-        isUserDeleted: isUserDeleted,
-        deleteUser: deleteUser
+        deleteUser: deleteUser,
+        isUserDeleted: isUserDeleted
       }}
     >
-
       <Router>
         <MainNavigation />
-        <main>
-          {routes}
-        </main>
+        <main>{routes}</main>
       </Router>
     </AuthContext.Provider>
   );
