@@ -41,7 +41,6 @@ const UpdatePlace = () => {
       try {
         const response = await sendRequest(API_URL + `/places/${placeId}`)
         setLoadedPlace(response.place)
-        console.log(response.place)
         setFormData(
           {
             title: {

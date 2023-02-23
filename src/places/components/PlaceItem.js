@@ -19,7 +19,6 @@ const PlaceItem = props => {
     const [showMap, setShowMap] = useState(false);
 
     const [showConfirmModal, setShowConfirmModal] = useState(false);
-    console.log(props)
 
     const openMapHandler = () => setShowMap(true);
     const closeMapHandler = () => setShowMap(false);
